@@ -1,5 +1,13 @@
 const express = require("express")
 const app = express()
+require("dotenv").config();
+const { Client, GatewayIntentBits, Collection } = require("discord.js")
+const { REST } = require("@discordjs/rest")
+const { Routes } = require("discord-api-types/v9")
+const fs = require("fs")
+const { Player, useQueue } = require("discord-player")
+const { Configuration, OpenAIApi } = require('openai');
+const { run } = require("./chat_gpt/askgpt")
 
 app.get("/", (req, res) => {
   res.send("Xin chào, tôi là bot âm nhạc")
@@ -10,21 +18,22 @@ app.listen(3000, () => {
 })
 
 
-require("dotenv").config();
-const { Client, GatewayIntentBits, Collection } = require("discord.js")
-const { REST } = require("@discordjs/rest")
-const { Routes } = require("discord-api-types/v9")
-const fs = require("fs")
-const { Player, useQueue } = require("discord-player")
-
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildVoiceStates
   ]
 })
+
+
+const config = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(config);
+
 
 client.slashcommands = new Collection()
 client.player = new Player(client, {
@@ -79,6 +88,11 @@ client.on("interactionCreate", (interaction) => {
   }
   handleCommand()
 })
+
+client.on("messageCreate", async (message) => {
+  await run(client, message, openai)
+});
+
 
 
 client.login(process.env.TOKEN)
