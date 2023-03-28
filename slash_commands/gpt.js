@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Configuration, OpenAIApi } = require("openai");
 var conversationLog = [
-  { role: "system", content: "Xin chào, bạn là một Bot AI tốt" },
+  { role: "system", content: "Xin chào, bạn là một AI thông minh và tốt đẹp, dường như bạn biết rất nhiều thứ" },
 ].slice(0, 15);
 
 module.exports = {
