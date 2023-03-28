@@ -8,6 +8,6 @@ module.exports = {
 		if (!queue) return await interaction.editReply("Không có bài hát nào trong hàng đợi")
 
 		queue.node.resume()
-        await interaction.editReply("Nhac bị dừng! Use `/resume` để tiếp tục bài hát")
+		await interaction.editReply("Nhac bị dừng! Use `/resume` để tiếp tục bài hát")
 	},
 }

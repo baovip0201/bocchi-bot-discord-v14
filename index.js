@@ -45,10 +45,10 @@ client.player = new Player(client, {
 
 let commands = []
 
-const slashFiles = fs.readdirSync("./slash").filter(file => file.endsWith(".js"))
+const slashFiles = fs.readdirSync("./slash_commands").filter(file => file.endsWith(".js"))
 
 for (const file of slashFiles) {
-  const slashcmd = require(`./slash/${file}`)
+  const slashcmd = require(`./slash_commands/${file}`)
   client.slashcommands.set(slashcmd.data.name, slashcmd)
   commands.push(slashcmd.data.toJSON())
 }
@@ -89,10 +89,9 @@ client.on("interactionCreate", (interaction) => {
   handleCommand()
 })
 
-client.on("messageCreate", async (message) => {
-  await run(client, message, openai)
-});
-
+// client.on("messageCreate", async (message) => {
+//   await run(client, message, openai)
+// });
 
 
 client.login(process.env.TOKEN)

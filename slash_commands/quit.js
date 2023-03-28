@@ -8,6 +8,6 @@ module.exports = {
 		if (!queue) return await interaction.editReply("Không có bài hát nào trong hàng đợi")
 
 		queue.delete()
-        await interaction.editReply("Tạm biệt!")
+		await interaction.editReply("Tạm biệt!")
 	},
 }

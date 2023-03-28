@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const {	EmbedBuilder } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("info").setDescription("Hiển thị thông tin về bài hát hiện tại"),
@@ -13,14 +13,14 @@ module.exports = {
 			length: 20,
 		})
 
-        const song = queue.currentTrack
+		const song = queue.currentTrack
 
 		await interaction.editReply({
 			embeds: [new EmbedBuilder()
-			.setColor("Blurple")
-            .setThumbnail(song.thumbnail)
-            .setDescription(`Đang chơi [${song.title}](${song.url})\n\n` + bar)
-        ],
+				.setColor("Blurple")
+				.setThumbnail(song.thumbnail)
+				.setDescription(`Đang chơi [${song.title}](${song.url})\n\n` + bar)
+			],
 		})
 	},
 }

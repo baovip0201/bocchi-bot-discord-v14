@@ -8,6 +8,6 @@ module.exports = {
 		if (!queue) return await interaction.editReply("Không có bài hát nào trong hàng đợi")
 
 		queue.tracks.shuffle()
-        await interaction.editReply(`Hàng đợi của ${queue.tracks.length} đã được shuffles `)
+		await interaction.editReply(`Hàng đợi của ${queue.tracks.length} đã được shuffles `)
 	},
 }
