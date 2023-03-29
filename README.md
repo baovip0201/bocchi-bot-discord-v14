@@ -3,3 +3,4 @@
 
 * Play music
 * Chat with chatGPT
+* Weather
