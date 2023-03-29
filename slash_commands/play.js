@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js")
 const { QueryType } = require("discord-player")
 
 module.exports = {
@@ -33,6 +33,7 @@ module.exports = {
         if (!queue.connection) await queue.connect(interaction.member.voice.channel)
 
         let embed = new EmbedBuilder()
+        let button = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId("exit").setLabel("Thoát").setStyle(ButtonStyle.Primary))
 
         if (interaction.options.getSubcommand() === "song") {
             let url = interaction.options.getString("url")
@@ -85,8 +86,11 @@ module.exports = {
                 .setFooter({ text: `Duration: ${song.duration}` })
         }
         if (!queue.node.isPlaying()) await queue.node.play()
+        if(interaction.isButton()){
+            await interaction.editReply("Đã thoát")
+        }
         await interaction.editReply({
-            embeds: [embed]
+            embeds: [embed], components:[button]
         })
     },
 }
