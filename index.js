@@ -7,7 +7,8 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 const { Player, useQueue } = require("discord-player")
 const { Configuration, OpenAIApi } = require('openai');
-const { run } = require("./chat_gpt/askgpt")
+const { run } = require("./database/mongo");
+
 
 app.get("/", (req, res) => {
   res.send("Xin chào, tôi là bot âm nhạc")
@@ -89,9 +90,9 @@ client.on("interactionCreate", (interaction) => {
   handleCommand()
 })
 
-// client.on("messageCreate", async (message) => {
-//   await run(client, message, openai)
-// });
+client.on("messageCreate", async (message) => {
+  await run(client, message)
+});
 
 
 client.login(process.env.TOKEN)

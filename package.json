@@ -2,7 +2,7 @@
   "name": "music",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "database/test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
     "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "mongodb": "^5.1.0",
     "openai": "^3.2.1"
   }
 }
