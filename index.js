@@ -7,7 +7,10 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 const { Player, useQueue } = require("discord-player")
 const { Configuration, OpenAIApi } = require('openai');
-const { run } = require("./database/mongo");
+//const { run } = require("./database/log_controller");
+const { connectMongoDb } = require("./database/connect-mongodb");
+const { addMember } = require("./admin_commands/guild-member-add");
+const { getConversationLog } = require("./moderation/conversation-log");
 
 
 app.get("/", (req, res) => {
@@ -73,6 +76,7 @@ client.on("ready", () => {
         }
       })
   }
+  connectMongoDb()
   console.log(`Logged in as ${client.user.tag}`)
 })
 
@@ -91,8 +95,12 @@ client.on("interactionCreate", (interaction) => {
 })
 
 client.on("messageCreate", async (message) => {
-  await run(client, message)
+  await getConversationLog(client, message)
 });
+
+client.on("guildMemberAdd", (member)=>{
+   addMember(member)
+})
 
 
 client.login(process.env.TOKEN)
