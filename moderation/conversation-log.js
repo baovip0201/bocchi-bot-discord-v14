@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 const conversationLogger = require("../models/ConversationLog")
-const { model, Schema } = require("mongoose")
 
 module.exports = {
     getConversationLog: async (client, message) => {

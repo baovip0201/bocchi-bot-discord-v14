@@ -5,12 +5,14 @@ const { Client, GatewayIntentBits, Collection } = require("discord.js")
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
-const { Player, useQueue } = require("discord-player")
+const { Player} = require("discord-player")
 const { Configuration, OpenAIApi } = require('openai');
 //const { run } = require("./database/log_controller");
 const { connectMongoDb } = require("./database/connect-mongodb");
 const { addMember } = require("./admin_commands/guild-member-add");
 const { getConversationLog } = require("./moderation/conversation-log");
+const { handleButton } = require("./handle/buttons");
+const { handleCommand } = require("./handle/commands");
 
 
 app.get("/", (req, res) => {
@@ -31,12 +33,6 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates
   ]
 })
-
-
-const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(config);
 
 
 client.slashcommands = new Collection()
@@ -82,16 +78,8 @@ client.on("ready", () => {
 
 
 client.on("interactionCreate", (interaction) => {
-  async function handleCommand() {
-    if (!interaction.isCommand()) return
-
-    const slashcmd = client.slashcommands.get(interaction.commandName)
-    if (!slashcmd) interaction.reply("Command không hợp lệ")
-
-    await interaction.deferReply()
-    await slashcmd.run({ client, interaction })
-  }
-  handleCommand()
+  if(interaction.isButton()) handleButton(client, interaction)
+  if(interaction.isCommand()) handleCommand(client, interaction)
 })
 
 client.on("messageCreate", async (message) => {

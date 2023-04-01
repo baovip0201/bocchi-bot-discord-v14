@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js")
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, Emoji } = require("discord.js")
 const { QueryType } = require("discord-player")
 
 module.exports = {
@@ -33,7 +33,24 @@ module.exports = {
         if (!queue.connection) await queue.connect(interaction.member.voice.channel)
 
         let embed = new EmbedBuilder()
-        let button = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId("exit").setLabel("Thoát").setStyle(ButtonStyle.Primary))
+        let button = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId("btn-play")
+                    .setLabel("⏸")
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setCustomId("btn-next")
+                    .setLabel("⏩")
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setCustomId("btn-shuffle")
+                    .setLabel("🔀")
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setCustomId("btn-quit")
+                    .setLabel("Quit")
+                    .setStyle(ButtonStyle.Danger))
 
         if (interaction.options.getSubcommand() === "song") {
             let url = interaction.options.getString("url")
@@ -86,11 +103,9 @@ module.exports = {
                 .setFooter({ text: `Duration: ${song.duration}` })
         }
         if (!queue.node.isPlaying()) await queue.node.play()
-        if(interaction.isButton()){
-            await interaction.editReply("Đã thoát")
-        }
+
         await interaction.editReply({
-            embeds: [embed], components:[button]
+            embeds: [embed], components: [button]
         })
     },
 }
