@@ -1,5 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
-const wait = require('node:timers/promises').setTimeout;
+
 module.exports = {
     handleButton: async (client, interaction) => {
         let buttonPause = new ActionRowBuilder()
@@ -39,29 +39,52 @@ module.exports = {
                     .setCustomId("btn-quit")
                     .setLabel("Quit")
                     .setStyle(ButtonStyle.Danger))
+        let embed = new EmbedBuilder()
 
-        const queue = client.player.nodes.get(interaction.guildId)
-        if (!queue) return await interaction.editReply("Không có bài hát nào trong hàng đợi")
+
+        var queue = await client.player.nodes.get(interaction.guildId)
+
         if (interaction.customId === "btn-play") {
+            if (!queue) return interaction.reply("Không có bài hát nào trong hàng đợi")
             if (queue.node.isPaused()) {
                 queue.node.resume()
-                interaction.update({ components: [buttonResume] })
+                await interaction.update({ components: [buttonResume] })
             } else {
                 queue.node.pause()
-                interaction.update({ components: [buttonPause] })
+                await interaction.update({ components: [buttonPause] })
             }
         }
         if (interaction.customId === "btn-next") {
-            queue.node.skip()
-            interaction.update({components:[buttonResume]})
+            if (!queue) {
+                interaction.reply("Không có bài hát nào trong hàng đợi")
+            } else {
+                queue.node.skip()
+                queue=client.player.nodes.get(interaction.guildId)
+                const song = queue.currentTrack
+                interaction.update({
+                    embeds: [embed
+                        .setColor("Blurple")
+                        .setDescription(`**[${song.title}](${song.url})**`)
+                        .setThumbnail(song.thumbnail)
+                        .setFooter({ text: `Duration: ${song.duration}` })],
+                    components: [buttonResume]
+                })
+            }
         }
         if (interaction.customId === "btn-shuffle") {
-            queue.tracks.shuffle()
-            interaction.update({ components: [buttonResume] })
+            if (!queue) {
+                interaction.reply("Không có bài hát nào trong hàng đợi")
+            } else {
+                
+                queue.tracks.shuffle()
+                await interaction.update({ components: [buttonResume] })
+            }
         }
         if (interaction.customId === "btn-quit") {
+            if(!queue) return await interaction.update({ components: [] })
             queue.delete()
-            interaction.update({ components: [buttonResume] })
+            await interaction.update({ components: [] })
         }
+
     }
 }
