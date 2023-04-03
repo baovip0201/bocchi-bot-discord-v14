@@ -1,7 +1,6 @@
 const {EmbedBuilder}=require("@discordjs/builders")
-const Schema=require("../models/Welcome")
+const Schema=require("../models/welcome")
 module.exports={
-    name: "guildMemberAdd",
     addMember: async (member)=>{
         Schema.findOne({Guild: member.guild.id})
         .then(async (data)=>{

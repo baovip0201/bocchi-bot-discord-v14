@@ -50,7 +50,12 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId("btn-quit")
                     .setLabel("Quit")
-                    .setStyle(ButtonStyle.Danger))
+                    .setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder()
+                    .setCustomId("btn-info")
+                    .setLabel("Info")
+                    .setStyle(ButtonStyle.Primary)
+                    )
 
         if (interaction.options.getSubcommand() === "song") {
             let url = interaction.options.getString("url")

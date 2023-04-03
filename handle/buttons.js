@@ -19,7 +19,11 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId("btn-quit")
                     .setLabel("Quit")
-                    .setStyle(ButtonStyle.Danger))
+                    .setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder()
+                    .setCustomId("btn-info")
+                    .setLabel("Info")
+                    .setStyle(ButtonStyle.Primary))
 
         let buttonResume = new ActionRowBuilder()
             .addComponents(
@@ -38,7 +42,11 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId("btn-quit")
                     .setLabel("Quit")
-                    .setStyle(ButtonStyle.Danger))
+                    .setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder()
+                    .setCustomId("btn-info")
+                    .setLabel("Info")
+                    .setStyle(ButtonStyle.Primary))
         let embed = new EmbedBuilder()
 
 
@@ -59,7 +67,7 @@ module.exports = {
                 interaction.reply("Không có bài hát nào trong hàng đợi")
             } else {
                 queue.node.skip()
-                queue=client.player.nodes.get(interaction.guildId)
+                queue=await client.player.nodes.get(interaction.guildId)
                 const song = queue.currentTrack
                 interaction.update({
                     embeds: [embed
@@ -84,6 +92,17 @@ module.exports = {
             if(!queue) return await interaction.update({ components: [] })
             queue.delete()
             await interaction.update({ components: [] })
+        }
+        if(interaction.customId ==="btn-info"){
+            const song= queue.currentTrack
+            interaction.update({
+                embeds: [embed
+                    .setColor("Blurple")
+                    .setDescription(`**[${song.title}](${song.url})**`)
+                    .setThumbnail(song.thumbnail)
+                    .setFooter({ text: `Duration: ${song.duration}` })],
+                components: [buttonResume]
+            })
         }
 
     }

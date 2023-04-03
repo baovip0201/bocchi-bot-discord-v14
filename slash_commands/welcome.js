@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, PermissionFlagsBits}=require("discord.js")
-const welcomeSchema=require("../models/Welcome")
+const welcomeSchema=require("../models/welcome")
 
 module.exports={
     data: new SlashCommandBuilder()
