@@ -1,19 +1,17 @@
 const express = require("express")
 const app = express()
 require("dotenv").config();
-const { Client, GatewayIntentBits, Collection, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ChannelType } = require("discord.js")
+const { Client, GatewayIntentBits, Collection,} = require("discord.js")
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 const { Player } = require("discord-player")
-const { Configuration, OpenAIApi } = require('openai');
 //const { run } = require("./database/log_controller");
 const { connectMongoDb } = require("./database/connect-mongodb");
 const { addMember } = require("./admin_commands/guild-member-add");
 const { getConversationLog } = require("./moderation/conversation-log");
 const { handleButton } = require("./handle/buttons");
 const { handleCommand } = require("./handle/commands");
-const ticketSchema = require("./models/ticketSchema");
 const { submitModal } = require("./handle/modal-submit");
 const { ticketForm } = require("./handle/ticket-form");
 
@@ -33,7 +31,8 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildVoiceStates
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMembers
   ]
 })
 
@@ -90,114 +89,12 @@ client.on("interactionCreate", (interaction) => {
 client.on("interactionCreate", (interaction) => {
   if (interaction.isButton()) return
   if (interaction.isChatInputCommand()) return
-  const modal = new ModalBuilder()
-    .setTitle("Cung cấp thông tin cho chúng tôi")
-    .setCustomId("modal")
-
-  const email = new TextInputBuilder()
-    .setCustomId("email")
-    .setRequired(true)
-    .setLabel("Cung cấp email của bạn")
-    .setPlaceholder("Bạn phải điền email hợp lệ")
-    .setStyle(TextInputStyle.Short)
-
-  const username = new TextInputBuilder()
-    .setCustomId("username")
-    .setRequired(true)
-    .setLabel("Cung cấp username của bạn")
-    .setPlaceholder("Đây là username của bạn")
-    .setStyle(TextInputStyle.Short)
-
-  const reason = new TextInputBuilder()
-    .setCustomId("reason")
-    .setRequired(true)
-    .setLabel("Lý do bạn viết ticket")
-    .setPlaceholder("Cho chúng tôi lý do viết ticket này")
-    .setStyle(TextInputStyle.Short)
-
-  const firstActionRow = new ActionRowBuilder().addComponents(email)
-  const secondActionRow = new ActionRowBuilder().addComponents(username)
-  const thirdActionRow = new ActionRowBuilder().addComponents(reason)
-
-  modal.addComponents(firstActionRow, secondActionRow, thirdActionRow)
-  let choices;
-  if (interaction.isStringSelectMenu()) {
-    choices = interaction.values
-    const result = choices.join('')
-    ticketSchema.findOne({ Guild: interaction.guild.id })
-      .then(async (data) => {
-        const filter = { Guild: interaction.guild.id }
-        const update = { Ticket: result }
-        ticketSchema.updateOne(filter, update, {
-          new: true
-        })
-          .then(value => console.log(value))
-      })
-  }
-
-  if (!interaction.isModalSubmit()) {
-    interaction.showModal(modal)
-  }
+  ticketForm(interaction)
 })
 
 client.on("interactionCreate", (interaction) => {
   if (interaction.isModalSubmit()) {
-    if (interaction.customId === "modal") {
-      ticketSchema.findOne({ Guild: interaction.guild.id })
-        .then(async (data) => {
-          const emailInput = interaction.fields.getTextInputValue("email")
-          const usernameInput = interaction.fields.getTextInputValue("username")
-          const reasonInput = interaction.fields.getTextInputValue("reason")
-
-          const postChannel = await interaction.guild.channels.cache.find(c => c.name === `ticket-${interaction.user.id}`)
-          if (postChannel) return await interaction.reply({ content: `Bạn đã có 1 ticket mở- ${postChannel}`, ephemeral: true })
-          const category = data.Channel
-
-          const embed = new EmbedBuilder()
-            .setColor("Blue")
-            .setTitle(`Ticket của ${interaction.user.username}`)
-            .setDescription("Chào bạn đến với ticket của bạn, vui lòng đợi nhân viên xem xet thông tin của bạn")
-            .addFields(
-              { name: `Email`, value: `${emailInput}` },
-              { name: `Username`, value: `${usernameInput}` },
-              { name: `Reason`, value: `${reasonInput}` },
-              { name: `Type`, value: `${data.Ticket}` })
-            .setFooter({ text: `${interaction.guild.name} tickets` })
-
-          const button = new ActionRowBuilder()
-            .addComponents(new ButtonBuilder()
-              .setCustomId("ticket")
-              .setLabel("Close ticket")
-              .setStyle(ButtonStyle.Danger))
-
-          let channel = await interaction.guild.channels.create({
-            name: `ticket-${interaction.user.id}`,
-            type: ChannelType.GuildText,
-            parent: `${category}`
-          })
-
-          let msg = await channel.send({ embeds: [embed], components: [button] })
-          interaction.reply({ content: `Ticket của bạn hiện đang mở trên ${channel}`, ephemeral: true })
-
-          const collector = msg.createMessageComponentCollector()
-
-          collector.on("collect", async i => {
-            ; (await channel).delete()
-            const deEmbed = new EmbedBuilder()
-              .setColor("Blue")
-              .setTitle(`Ticker của bạn đã đóng`)
-              .setDescription("Cảm ơn đã liên hệ với chúng tôi, nếu bạn có vấn đề nào khác, đừng ngần ngại viết ticket khác")
-              .setFooter({ text: `${interaction.guild.name} tickets` })
-              .setTimestamp()
-
-            await interaction.member.send({ embeds: [deEmbed] }).catch(err => {
-              return
-            })
-          })
-        })
-
-
-    }
+    submitModal(interaction)
   }
 })
 

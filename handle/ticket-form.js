@@ -2,10 +2,7 @@ const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = req
 const ticketSchema = require("../models/ticketSchema")
 
 module.exports = {
-    ticketForm: async ({ client, interaction }) => {
-
-        
-
+    ticketForm: async (interaction) => {
         const modal = new ModalBuilder()
             .setTitle("Cung cấp thông tin cho chúng tôi")
             .setCustomId("modal")
@@ -41,7 +38,7 @@ module.exports = {
             choices = interaction.values
             const result = choices.join('')
             ticketSchema.findOne({ Guild: interaction.guild.id })
-                .then(async (err, data) => {
+                .then(async (data) => {
                     const filter = { Guild: interaction.guild.id }
                     const update = { Ticket: result }
                     ticketSchema.updateOne(filter, update, {
@@ -54,5 +51,8 @@ module.exports = {
         if (!interaction.isModalSubmit()) {
             interaction.showModal(modal)
         }
+
+
+
     }
 }

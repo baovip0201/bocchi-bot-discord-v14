@@ -1,4 +1,4 @@
-const {EmbedBuilder}=require("@discordjs/builders")
+const {EmbedBuilder}=require("discord.js")
 const Schema=require("../models/welcome")
 module.exports={
     addMember: async (member)=>{
@@ -9,10 +9,10 @@ module.exports={
             const welcomeChannel=member.guild.channels.cache.get(data.Channel)
             let embed= new EmbedBuilder()
 
-            embed.setColor("DarkOrange")
+            embed.setColor("DarkGreen")
             .setTitle("**Thành viên mới**")
             .setDescription(data.Content)
-            .addFields({name: "Tống số thành viên", value: `${guild.memberCount}`})
+            .addFields({name: "Tống số thành viên", value: `${member.guild.memberCount}`})
             .setTimestamp(Date.now())
 
             welcomeChannel.send({embeds: [embed]})
