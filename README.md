@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://drive.google.com/file/d/144nZRWO99qSHAv9yQV2ToQ1DaAijXik6/view?usp=share_link" alt="Bot logo"></a>
+ <img width=200px height=200px src="https://user-images.githubusercontent.com/66128080/230161231-eb94a156-9bca-4b97-8723-feb060d19fb8.png" alt="Bot logo"></a>
 </p>
 
 <h3 align="center">Bocchi Bot Discord</h3>
@@ -40,7 +40,9 @@ Bocchi Bot is a discord bot, created from Nodejs, providing many popular feature
 
 ## 🎥 Demo / Working <a name = "demo"></a>
 
-![Working](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWY5ZmQyODY3NGU5M2M1NTE5NjBhMTYzODlmYTc5ZDliYjJhZTk4YyZjdD1n/zd3K3qXnz2MLT1A4sK/giphy.gif)
+![Working](https://user-images.githubusercontent.com/66128080/230162570-476c8889-a0bb-4d13-ba94-258cd973c477.png)![image](https://user-images.githubusercontent.com/66128080/230163207-23d8d9cc-7fc5-4aef-971f-56d2bd366a40.png)![image](https://user-images.githubusercontent.com/66128080/230163437-002a1e30-b94b-42cd-a9fc-518ba4f95e97.png)
+
+
 
 ## 💭 How it works <a name = "working"></a>
 
