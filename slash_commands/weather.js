@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js")
+const axios = require("axios").default
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,15 +8,23 @@ module.exports = {
         .addStringOption((option) => option.setName("keyword").setDescription("Nhập địa điểm").setRequired(true)),
     run: async ({ client, interaction }) => {
         const city = interaction.options.getString("keyword")
-        if (city === "") return;
         let embed = new EmbedBuilder()
-        await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.WEATHER_API_KEY}`)
-            .then(response => response.json())
-            .then(json => {
-                if (json.cod === '404') return interaction.editReply("Không có phản hồi")
 
+        axios.get(`https://api.openweathermap.org/data/2.5/weather`,
+            {
+                params: {
+                    q: city,
+                    units: 'metric',
+                    appid: process.env.WEATHER_API_KEY
+                },
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then((res) => {
+                console.log(res.data)
                 let image = ''
-                switch (json.weather[0].main) {
+                switch (res.data.weather[0].main) {
                     case 'Clear':
                         image = 'https://cdn-icons-png.flaticon.com/512/4814/4814268.png';
                         break;
@@ -40,21 +49,16 @@ module.exports = {
                         image = '';
                 }
 
-
-                const temperature = `${parseInt(json.main.temp)} °C`;
-                const humidity = `${json.main.humidity}%`;
-                const description = `${json.weather[0].description}`;
-                const wind = `${parseInt(json.wind.speed)}Km/h`;
-
-                // const convertToArray=description.toLowerCase().split(' ');
-                // const result = convertToArray.map(function (val) {
-
-                //     return val.replace(val.charAt(0), val.charAt(0).toUpperCase());
-
-                // });
+                const name = `${res.data.name}`
+                const temperature = `${parseInt(res.data.main.temp)} °C`
+                const humidity = `${res.data.main.humidity}%`
+                const description = res.data.weather[0].description.replace(/\w\S*/g, txt => {
+                    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+                })
+                const wind = `${parseInt(res.data.wind.speed)}Km/h`
 
                 embed.setColor("DarkOrange")
-                    .setDescription(`**${temperature}**\n
+                    .setDescription(`**${name}: ${temperature}**\n
                 **${description}**\n`)
                     .setAuthor({
                         iconURL: interaction.user.displayAvatarURL(),
@@ -77,5 +81,7 @@ module.exports = {
                     .setTimestamp(Date.now())
                 interaction.editReply({ embeds: [embed] })
             })
+            .catch(err => console.log(err))
+
     }
 }
