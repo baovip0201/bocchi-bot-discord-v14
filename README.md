@@ -1,23 +1,22 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/FxL5qM0.jpg" alt="Bot logo"></a>
+ <img width=200px height=200px src="https://user-images.githubusercontent.com/66128080/230161231-eb94a156-9bca-4b97-8723-feb060d19fb8.png" alt="Bot logo"></a>
 </p>
 
-<h3 align="center">music</h3>
+<h3 align="center">Bocchi Bot Discord</h3>
 
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![Platform](https://img.shields.io/badge/platform-reddit-orange.svg)](https://www.reddit.com/user/Wordbook_Bot)
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![Platform](https://img.shields.io/badge/platform-discord-blueviolet)]()
+[![GitHub Issues](https://img.shields.io/badge/issues-0%20open-yellow)](https://github.com/baovip0201/bocchi-bot-discord-v14/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/baovip0201/bocchi-bot-discord-v14/pulls)
 
 </div>
 
 ---
 
-<p align="center"> 🤖 Few lines describing what your bot does.
+<p align="center"> 🤖 Bocchi Bot
     <br> 
 </p>
 
@@ -37,56 +36,48 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your bot.
+Bocchi Bot is a discord bot, created from Nodejs, providing many popular features, especially chatting with ChatGPT
 
 ## 🎥 Demo / Working <a name = "demo"></a>
 
-![Working](https://media.giphy.com/media/20NLMBm0BkUOwNljwv/giphy.gif)
+![Working](https://user-images.githubusercontent.com/66128080/230162570-476c8889-a0bb-4d13-ba94-258cd973c477.png)![image](https://user-images.githubusercontent.com/66128080/230163207-23d8d9cc-7fc5-4aef-971f-56d2bd366a40.png)![image](https://user-images.githubusercontent.com/66128080/230163437-002a1e30-b94b-42cd-a9fc-518ba4f95e97.png)
+
+
 
 ## 💭 How it works <a name = "working"></a>
 
-The bot first extracts the word from the comment and then fetches word definitions, part of speech, example and source from the Oxford Dictionary API.
+Bocchi Bot provides many functions such as: playing music, viewing the weather, chatting with ChatGPT, using GPT chat to create images on demand, ticketing system... Through slashcommands, we can call functions easily. By using openai APIs for chatGPT function, openweathermap for weather viewing function
 
-If the word does not exist in the Oxford Dictionary, the Oxford API then returns a 404 response upon which the bot then tries to fetch results form the Urban Dictionary API.
-
-The bot uses the Pushshift API to fetch comments, PRAW module to reply to comments and Heroku as a server.
-
-The entire bot is written in Python 3.6
 
 ## 🎈 Usage <a name = "usage"></a>
 
 To use the bot, type:
 
 ```
-!dict word
+/slashcomand
 ```
 
-The first part, i.e. "!dict" **is not** case sensitive.
-
-The bot will then give you the Oxford Dictionary (or Urban Dictionary; if the word does not exist in the Oxford Dictionary) definition of the word as a comment reply.
 
 ### Example:
 
-> !dict what is love
+> /chat-bot chat 'Xin chào'
 
 **Definition:**
 
-Baby, dont hurt me~
-Dont hurt me~ no more.
+Xin chào, tôi là AI. Tôi có thể giúp gì cho bạn ?
 
 **Example:**
 
-Dude1: Bruh, what is love?
-Dude2: Baby, dont hurt me, dont hurt me- no more!
-Dude1: dafuq?
+Music play feature
+> /play search 'songname'
 
-**Source:** https://www.urbandictionary.com/define.php?term=what%20is%20love
+**Source:** 
 
 ---
 
-<sup>Beep boop. I am a bot. If there are any issues, contact my [Master](https://www.reddit.com/message/compose/?to=PositivePlayer1&subject=/u/Wordbook_Bot)</sup>
+<sup>Beep boop. I am a bot. If there are any issues, contact my [Master](https://discord.gg/9asPGWwY)</sup>
 
-<sup>Want to make a similar reddit bot? Check out: [GitHub](https://github.com/kylelobo/Reddit-Bot)</sup>
+<sup>Want to make a similar discord bot? Check out: [GitHub](https://github.com/baovip0201/bocchi-bot-discord-v14)</sup>
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -97,43 +88,42 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them.
 
 ```
-Give examples
+Create file .env with props
+TOKEN=""
+CLIENT_ID=""
+OPENAI_API_KEY=""
+WEATHER_API_KEY=""
+MONGODB=""
+
+
 ```
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
+Run project
 
 ```
-Give the example
+node .
 ```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
 
 ## 🚀 Deploying your own bot <a name = "deployment"></a>
 
 To see an example project on how to deploy your bot, please see my own configuration:
 
-- **Heroku**: https://github.com/kylelobo/Reddit-Bot#deploying_the_bot
+- **Replit**: 
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [PRAW](https://praw.readthedocs.io/en/latest/) - Python Reddit API Wrapper
-- [Heroku](https://www.heroku.com/) - SaaS hosting platform
+- [NodeJS](https://nodejs.org/en/download/) - Server
+- [Replit](https://replit.com/) - hosting platform
+- [OpenAI](https://platform.openai.com/docs/api-reference/) - API chat GPT
+- [openweathermap](https://openweathermap.org/api) - API weather
+
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+- [@baovip0201](https://github.com/baovip0201) - Idea & Initial work
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+See also the list of [contributors]() who participated in this project.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
