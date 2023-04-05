@@ -6,41 +6,80 @@ var conversationLog = [
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("ask")
+    .setName("chat-bot")
     .setDescription("Hỏi bot")
-    .addStringOption((option) =>
-      option.setName("message")
-            .setDescription("Nhập câu hỏi")
+    .addSubcommand((subcommand) => 
+      subcommand
+        .setName("image")
+        .setDescription("Kêu bot gửi ảnh")
+        .addStringOption((option) => 
+          option.setName("message")
+            .setDescription("Nhập tin nhắn")
             .setRequired(true)
+        )
     )
-    .addNumberOption((option) =>
-      option
-        .setName("number")
-        .setDescription("Nhập 1 để tạo reset cuộc trò chuyện")
-        .setMinValue(1)
+    .addSubcommand((subcommand) => 
+      subcommand
+        .setName("chat")
+        .setDescription("Trò chuyện dạng văn bản")
+        .addStringOption((option) => 
+          option.setName("message")
+            .setDescription("Nhập tin nhắn")
+            .setRequired(true)
+        )
+
+    )
+    .addSubcommand((subcommand) => 
+      subcommand
+        .setName("edit-image")
+        .setDescription("Chỉnh sửa ảnh")
+        .addStringOption((option) => 
+          option.setName("message")
+            .setDescription("Nhập tin nhắn")
+            .setRequired(true)
+        )
+
     ),
   run: async ({ client, interaction }) => {
-    const text = interaction.options.getString("message");
     const config = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });
     const openai = new OpenAIApi(config);
 
     try {
-      if (interaction.options.getNumber("number") === 1)
-        conversationLog = [
-          { role: "system", content: "Xin chào, bạn là một Bot AI tốt" },
-        ].slice(0, 15);
+      // if (interaction.options.getNumber("number") === 1)
+      //   conversationLog = [
+      //     { role: "system", content: "Xin chào, bạn là một Bot AI tốt" },
+      //   ].slice(0, 15);
 
-      conversationLog.push({ role: "user", content: text });
-      console.log(conversationLog);
+      if (interaction.options.getSubcommand() === "image") {
+        let text = interaction.options.getString("message");
+        //conversationLog.push({ role: "user", content: text });
+        const res = await openai.createImage({
+          prompt: text,
+          n: 1,
+          size: "1024x1024"
+        })
+        const imageUrl = res.data.data[0].url
+        interaction.editReply(imageUrl)
 
-      const res = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: conversationLog,
-      });
-      
-      interaction.editReply(res.data.choices[0].message);
+      }
+      else if (interaction.options.getSubcommand() === "chat") {
+        let text = interaction.options.getString("message");
+        conversationLog.push({ role: "user", content: text });
+        const res = await openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: conversationLog,
+        });
+        interaction.editReply(res.data.choices[0].message);
+      }
+      else if (interaction.options.getSubcommand() === "chat") {
+        let text = interaction.options.getString("message");
+        const res=await openai.createImageEdit(
+        )
+        const imageUrl=res.data.data[0].url
+        interaction.editReply(imageUrl)
+      }
     } catch (error) {
       console.log(error);
     }
