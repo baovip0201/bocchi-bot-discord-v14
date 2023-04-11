@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, PermissionFlagsBits}=require("discord.js")
-const welcomeSchema=require("../models/welcome")
+const axios = require("axios").default
 
 module.exports={
     data: new SlashCommandBuilder()
@@ -13,18 +13,23 @@ module.exports={
         const channel= interaction.options.getChannel("channel")
         const welcomeMessage= interaction.options.getString("welcome-message")
         const welcomeRole= interaction.options.getRole("welcome-role")
-
-        welcomeSchema.findOne({Guild: interaction.guild.id})
-        .then(async (data)=>{
-            if(!data){
-                const newWelcome= await welcomeSchema.create({
-                    Guild: interaction.guild.id,
-                    Channel: channel.id,
-                    Content: welcomeMessage,
-                    Role: welcomeRole.id
-                })
-            }
+        const reqBody={
+            guildId: interaction.guild.id,
+            channelId: channel.id,
+            content: welcomeMessage,
+            role: welcomeRole.id
+        }
+        axios.post('https://mini-api-bocchi-bot.vercel.app/welcome', reqBody).then((res)=>{
+            console.log(res.data)
             interaction.editReply("Tạo tin nhắn chào mừng thành công!!")
+        }).catch(error=>{
+            if (error.response) {
+                console.log('Server Error:', error.response.data);
+              } else if (error.request) {
+                console.log('Network Error:', error.message);
+              } else {
+                console.log('Unknown Error:', error.message);
+              }
         })
     }
 }

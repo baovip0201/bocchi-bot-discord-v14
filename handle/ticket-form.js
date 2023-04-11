@@ -1,5 +1,5 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require("discord.js")
-const ticketSchema = require("../models/ticketSchema")
+const axios = require("axios").default
 
 module.exports = {
     ticketForm: async (interaction) => {
@@ -37,15 +37,21 @@ module.exports = {
         if (interaction.isStringSelectMenu()) {
             choices = interaction.values
             const result = choices.join('')
-            ticketSchema.findOne({ Guild: interaction.guild.id })
-                .then(async (data) => {
-                    const filter = { Guild: interaction.guild.id }
-                    const update = { Ticket: result }
-                    ticketSchema.updateOne(filter, update, {
-                        new: true
-                    })
-                        .then(value => console.log(value))
-                })
+            const guildId= interaction.guild.id
+            const update = { ticket: result }
+            axios.post(`https://mini-api-bocchi-bot.vercel.app/ticketsystem/${guildId}`, update ).then(res=>{
+              if(res.status===200){
+                console.log(res.data)
+              }
+            }).catch(error=>{
+                if (error.response) {
+                    console.log('Server Error:', error.response.data);
+                  } else if (error.request) {
+                    console.log('Network Error:', error.message);
+                  } else {
+                    console.log('Unknown Error:', error.message);
+                  }
+            })
         }
 
         if (!interaction.isModalSubmit()) {

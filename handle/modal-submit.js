@@ -1,18 +1,19 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType} = require("discord.js")
-const ticketSchema = require("../models/ticketSchema")
+const axios= require("axios").default
 
 module.exports = {
     submitModal: async (interaction) => {
         if (interaction.customId === "modal") {
-            ticketSchema.findOne({ Guild: interaction.guild.id })
-              .then(async (data) => {
+          const guildId= interaction.guild.id
+            axios.get(`https://mini-api-bocchi-bot.vercel.app/ticketsystem/${guildId}`).then(async res=>{
+              if(res.status=200){
                 const emailInput = interaction.fields.getTextInputValue("email")
                 const usernameInput = interaction.fields.getTextInputValue("username")
                 const reasonInput = interaction.fields.getTextInputValue("reason")
       
                 const postChannel = await interaction.guild.channels.cache.find(c => c.name === `ticket-${interaction.user.id}`)
                 if (postChannel) return await interaction.reply({ content: `Bạn đã có 1 ticket mở- ${postChannel}`, ephemeral: true })
-                const category = data.Channel
+                const category = res.data.Channel
       
                 const embed = new EmbedBuilder()
                   .setColor("Blue")
@@ -22,7 +23,7 @@ module.exports = {
                     { name: `Email`, value: `${emailInput}` },
                     { name: `Username`, value: `${usernameInput}` },
                     { name: `Reason`, value: `${reasonInput}` },
-                    { name: `Type`, value: `${data.Ticket}` })
+                    { name: `Type`, value: `${res.data.Ticket}` })
                   .setFooter({ text: `${interaction.guild.name} tickets` })
       
                 const button = new ActionRowBuilder()
@@ -55,9 +56,16 @@ module.exports = {
                     return
                   })
                 })
-              })
-      
-      
+              }
+            }).catch(error=>{
+              if (error.response) {
+                console.log('Server Error:', error.response.data);
+              } else if (error.request) {
+                console.log('Network Error:', error.message);
+              } else {
+                console.log('Unknown Error:', error.message);
+              }
+            })      
           }
     }
 }

@@ -7,7 +7,6 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 const { Player } = require("discord-player")
 //const { run } = require("./database/log_controller");
-const { connectMongoDb } = require("./database/connect-mongodb");
 const { addMember } = require("./admin_commands/guild-member-add");
 const { getConversationLog } = require("./moderation/conversation-log");
 const { handleButton } = require("./handle/buttons");
@@ -73,8 +72,8 @@ client.on("ready", () => {
           process.exit(1)
         }
       })
+      
   }
-  connectMongoDb()
   console.log(`Logged in as ${client.user.tag}`)
 })
 
