@@ -13,13 +13,12 @@ const { handleButton } = require("./handle/buttons");
 const { handleCommand } = require("./handle/commands");
 const { submitModal } = require("./handle/modal-submit");
 const { ticketForm } = require("./handle/ticket-form");
+const router=require("./routes/hello")
 
 
-app.get("/", (req, res) => {
-  res.send("Xin chào, tôi là bot âm nhạc")
-})
+app.use('/hello', router)
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("App is ready")
 })
 
